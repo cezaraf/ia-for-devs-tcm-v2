@@ -1,0 +1,13 @@
+<div class="city-list" role="listbox" aria-label="Cidades encontradas">
+  @for (city of cities(); track city.id) {
+    <button
+      #cityBtn
+      type="button"
+      class="city-item"
+      role="option"
+      (click)="selectCity(city)"
+    >
+      {{ formatCity(city) }}
+    </button>
+  }
+</div>

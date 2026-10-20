@@ -1,0 +1,33 @@
+<form (submit)="onSubmit($event)" class="search-form">
+  <label for="city-input" class="search-label">cidade</label>
+  <div class="search-row">
+    <input
+      #cityInput
+      id="city-input"
+      type="text"
+      class="search-input"
+      [value]="query()"
+      (input)="onInput($event)"
+      [disabled]="disabled()"
+      autocomplete="off"
+      spellcheck="false"
+    />
+    <button
+      type="submit"
+      class="btn-primary"
+      [disabled]="disabled()"
+    >
+      buscar
+    </button>
+    @if (hasGeolocation()) {
+      <button
+        type="button"
+        class="btn-secondary"
+        [disabled]="disabled()"
+        (click)="onLocationClick()"
+      >
+        [usar minha localização]
+      </button>
+    }
+  </div>
+</form>

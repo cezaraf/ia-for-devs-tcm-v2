@@ -1,0 +1,15 @@
+<article class="card">
+  <header class="head">
+    <h2 class="label">{{ label() }}</h2>
+    <span class="badge">{{ weather().isDay ? '[ DIA ]' : '[ NOITE ]' }}</span>
+  </header>
+  <p class="temperature">{{ temperature() }}°C</p>
+  <p class="condition">{{ weather().condition }}</p>
+  <div class="details">
+    <p class="detail"><span class="marker">[+]</span> sensação {{ apparent() }}°C</p>
+    <p class="detail"><span class="marker">[+]</span> umidade {{ weather().relativeHumidity }}%</p>
+    <p class="detail"><span class="marker">[+]</span> vento {{ wind() }}</p>
+    <p class="detail"><span class="marker">[+]</span> precipitação {{ precipitation() }} mm</p>
+  </div>
+  <p class="footer">medido às {{ time() }} (hora local)</p>
+</article>

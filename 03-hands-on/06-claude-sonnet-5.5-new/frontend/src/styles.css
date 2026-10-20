@@ -1,0 +1,85 @@
+/* You can add global styles to this file, and also import other style files */
+
+@import 'tailwindcss';
+
+:root {
+  --font-mono: 'JetBrains Mono', 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, Monaco,
+    Consolas, 'Liberation Mono', 'Courier New', monospace;
+
+  --font-size-base: 16px;
+  --font-size-small: 14px;
+  --font-size-temperature: clamp(28px, 6vw, 38px);
+
+  --font-weight-regular: 400;
+  --font-weight-medium: 500;
+  --font-weight-bold: 700;
+
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-12: 48px;
+  --space-24: 96px;
+
+  --radius-control: 4px;
+  --radius-container: 0px;
+
+  --container-max-width: 640px;
+  --control-height: 40px;
+  --row-height: 40px;
+  --button-padding-inline: 20px;
+  --border-width: 1px;
+  --focus-ring-width: 2px;
+  --focus-ring-offset: 2px;
+  --input-padding: 8px 12px;
+  --list-max-height: 200px;
+  --card-min-height: 320px;
+}
+
+:root,
+[data-theme='day'] {
+  --color-bg: #fdfcfc;
+  --color-surface: #f8f7f7;
+  --color-surface-card: #f1eeee;
+  --color-text: #201d1d;
+  --color-text-body: #424245;
+  --color-text-mute: #646262;
+  --color-hairline: rgba(15, 0, 0, 0.12);
+  --color-hairline-strong: #646262;
+  --color-accent: #201d1d;
+  --color-on-accent: #fdfcfc;
+  --color-danger: #ff3b30;
+
+  --card-bg: var(--color-bg);
+  --card-border: var(--color-hairline);
+}
+
+[data-theme='night'] {
+  --color-bg: #201d1d;
+  --color-surface: #302c2c;
+  --color-surface-card: #302c2c;
+  --color-text: #fdfcfc;
+  --color-text-body: #9a9898;
+  --color-text-mute: #9a9898;
+  --color-hairline: rgba(253, 252, 252, 0.12);
+  --color-hairline-strong: #9a9898;
+  --color-accent: #fdfcfc;
+  --color-on-accent: #201d1d;
+  --color-danger: #ff3b30;
+
+  --card-bg: var(--color-surface);
+  --card-border: transparent;
+}
+
+body {
+  margin: 0;
+  background: var(--color-bg);
+  color: var(--color-text-body);
+  font-family: var(--font-mono);
+  font-size: var(--font-size-base);
+  font-style: normal;
+  font-weight: var(--font-weight-regular);
+  line-height: 1.5;
+}

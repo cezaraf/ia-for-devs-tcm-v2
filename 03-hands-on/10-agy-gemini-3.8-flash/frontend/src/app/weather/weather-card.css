@@ -1,0 +1,97 @@
+.weather-card {
+  min-height: 320px;
+  padding: 48px 32px;
+  box-sizing: border-box;
+  background-color: var(--color-card-bg);
+  border: var(--card-border);
+  border-radius: var(--radius-container);
+  display: flex;
+  flex-direction: column;
+}
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--space-16);
+  margin-bottom: var(--space-24);
+}
+
+.location-label {
+  font-family: var(--font-mono);
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 1.5;
+  color: var(--color-text);
+  margin: 0;
+}
+
+.badge {
+  padding: 4px 8px;
+  background-color: var(--color-text);
+  color: var(--color-bg);
+  border-radius: var(--radius-control);
+  font-family: var(--font-mono);
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 2;
+  white-space: nowrap;
+}
+
+.temp-section {
+  margin-bottom: var(--space-24);
+}
+
+.temperature {
+  font-family: var(--font-mono);
+  font-size: clamp(28px, 6vw, 38px);
+  font-weight: 700;
+  line-height: 1.5;
+  letter-spacing: 0;
+  color: var(--color-text);
+}
+
+.condition {
+  font-family: var(--font-mono);
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 1.5;
+  color: var(--color-text-body);
+}
+
+.details-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--space-16);
+  margin-bottom: var(--space-32);
+}
+
+.detail-line {
+  padding: 8px 0;
+  font-family: var(--font-mono);
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1.5;
+  color: var(--color-text);
+  white-space: pre;
+}
+
+.card-footer {
+  margin-top: auto;
+  font-family: var(--font-mono);
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 2;
+  color: var(--color-text-mute);
+}
+
+@media (max-width: 639px) {
+  .weather-card {
+    padding: 24px 16px;
+  }
+
+  .details-grid {
+    grid-template-columns: 1fr;
+    gap: var(--space-8);
+  }
+}

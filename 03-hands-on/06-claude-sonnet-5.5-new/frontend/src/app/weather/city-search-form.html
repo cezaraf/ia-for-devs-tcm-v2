@@ -1,0 +1,26 @@
+<form class="form" (submit)="onSubmit($event)" novalidate>
+  <label class="label" for="city-name">cidade</label>
+  <div class="controls">
+    <input
+      #nameInput
+      id="city-name"
+      class="input"
+      type="text"
+      name="city"
+      autocomplete="off"
+      [value]="name()"
+      (input)="onInput($event)"
+    />
+    <button type="submit" class="primary" [disabled]="disabled()">buscar</button>
+    @if (geolocationSupported()) {
+      <button
+        type="button"
+        class="secondary"
+        [disabled]="disabled()"
+        (click)="locateRequested.emit()"
+      >
+        [usar minha localização]
+      </button>
+    }
+  </div>
+</form>

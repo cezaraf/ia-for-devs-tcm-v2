@@ -1,0 +1,43 @@
+<div class="panel" [attr.data-theme]="theme()">
+  <div class="container">
+    <h1 class="title">[clima]</h1>
+
+    <app-city-search-form
+      [searching]="state() === 'searching'"
+      [loading]="state() === 'loading'"
+      [geolocationAvailable]="geolocationAvailable()"
+      (search)="onSearch($event)"
+      (useLocation)="onUseLocation()"
+    />
+
+    <div
+      class="result-area"
+      aria-live="polite"
+      [attr.aria-busy]="isBusy() ? 'true' : null"
+    >
+      @if (state() === 'idle') {
+        <p class="hint">digite uma cidade para ver o clima atual</p>
+      }
+      @if (state() === 'searching' || state() === 'loading') {
+        <app-weather-card-skeleton />
+      }
+      @if (state() === 'choosing') {
+        <app-city-list [cities]="cities()" (selectCity)="onSelectCity($event)" />
+      }
+      @if (state() === 'success' && weather()) {
+        <app-weather-card
+          [weather]="weather()!"
+          [city]="selectedCity()"
+          [useMyLocationLabel]="useMyLocationLabel()"
+        />
+      }
+      @if (state() === 'error') {
+        <app-error-message
+          [message]="errorMessage()"
+          [showRetry]="showRetry()"
+          (retry)="onRetry()"
+        />
+      }
+    </div>
+  </div>
+</div>

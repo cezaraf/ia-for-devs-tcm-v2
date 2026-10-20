@@ -1,0 +1,1 @@
+<div class="list">@for (city of cities(); track city.id; let first = $first) { <button type="button" (click)="selected.emit(city)" [autofocus]="first">{{ label(city) }}</button> }</div>

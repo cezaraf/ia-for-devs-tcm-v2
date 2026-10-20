@@ -1,0 +1,94 @@
+<section class="w-full max-w-xl rounded-2xl bg-white p-6 shadow-lg ring-1 ring-slate-200">
+  <h1 class="text-2xl font-semibold text-slate-900">Painel de clima</h1>
+  <p class="mt-1 text-sm text-slate-500">Veja o clima atual de qualquer cidade.</p>
+
+  <form class="mt-5 flex gap-2" (ngSubmit)="search()">
+    <label class="sr-only" for="city">Cidade</label>
+    <input
+      id="city"
+      name="city"
+      type="text"
+      autocomplete="off"
+      placeholder="Ex.: Salvador"
+      maxlength="100"
+      class="min-w-0 flex-1 rounded-lg border border-slate-300 px-3 py-2 text-slate-900 outline-none focus:border-sky-500 focus:ring-2 focus:ring-sky-200"
+      [ngModel]="city()"
+      (ngModelChange)="city.set($event)"
+    />
+    <button
+      type="submit"
+      class="rounded-lg bg-sky-600 px-4 py-2 font-medium text-white hover:bg-sky-700 disabled:opacity-60"
+      [disabled]="loading()"
+    >
+      Buscar
+    </button>
+  </form>
+
+  @if (geoAvailable()) {
+    <button
+      type="button"
+      class="mt-3 text-sm text-sky-700 underline-offset-2 hover:underline disabled:opacity-60"
+      [disabled]="geoLoading() || loading()"
+      (click)="useMyLocation()"
+    >
+      {{ geoLoading() ? 'Obtendo localização…' : '📍 Usar minha localização' }}
+    </button>
+  }
+
+  <div aria-live="polite" class="mt-5">
+    @if (loading()) {
+      <p class="text-slate-500">Buscando clima…</p>
+    }
+
+    @if (error(); as message) {
+      <p role="alert" class="rounded-lg bg-red-50 px-3 py-2 text-sm text-red-700">{{ message }}</p>
+    }
+
+    @if (weather(); as w) {
+      <article [class.opacity-50]="loading()">
+        <h2 class="text-lg font-medium text-slate-800">{{ placeLabel(w) }}</h2>
+
+        <div class="mt-3 flex items-center gap-4">
+          <span class="text-6xl" aria-hidden="true">{{ w.current.icon }}</span>
+          <div>
+            <p class="text-5xl font-semibold text-slate-900">
+              {{ w.current.temperature.toFixed(0) }}{{ w.units.temperature }}
+            </p>
+            <p class="text-slate-600">{{ w.current.description }}</p>
+          </div>
+        </div>
+
+        <dl class="mt-5 grid grid-cols-2 gap-3 text-sm sm:grid-cols-4">
+          <div class="rounded-lg bg-slate-50 p-3">
+            <dt class="text-slate-500">Sensação</dt>
+            <dd class="font-medium text-slate-900">
+              {{ w.current.apparentTemperature.toFixed(0) }}{{ w.units.temperature }}
+            </dd>
+          </div>
+          <div class="rounded-lg bg-slate-50 p-3">
+            <dt class="text-slate-500">Umidade</dt>
+            <dd class="font-medium text-slate-900">{{ w.current.humidity }}{{ w.units.humidity }}</dd>
+          </div>
+          <div class="rounded-lg bg-slate-50 p-3">
+            <dt class="text-slate-500">Vento</dt>
+            <dd class="font-medium text-slate-900">
+              {{ w.current.windSpeed.toFixed(0) }} {{ w.units.windSpeed }} {{ compass(w.current.windDirection) }}
+            </dd>
+          </div>
+          <div class="rounded-lg bg-slate-50 p-3">
+            <dt class="text-slate-500">Precipitação</dt>
+            <dd class="font-medium text-slate-900">{{ w.current.precipitation }} {{ w.units.precipitation }}</dd>
+          </div>
+        </dl>
+
+        <p class="mt-4 text-xs text-slate-400">
+          Atualizado em {{ w.current.time.replace('T', ' ') }}
+          @if (w.location.timezone) {
+            ({{ w.location.timezone }})
+          }
+          · Dados: Open-Meteo
+        </p>
+      </article>
+    }
+  </div>
+</section>

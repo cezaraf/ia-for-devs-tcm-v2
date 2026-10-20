@@ -1,0 +1,35 @@
+.error {
+  border: 1px solid var(--color-hairline);
+  border-radius: var(--radius-container);
+  padding: var(--space-6) var(--space-8);
+  background: var(--color-bg);
+}
+
+.error-text {
+  margin: 0 0 var(--space-4);
+  color: var(--color-text);
+  font-size: 16px;
+  line-height: 1.5;
+}
+
+.error-marker {
+  color: var(--color-danger);
+}
+
+.btn-secondary {
+  height: 40px;
+  padding: 4px 20px;
+  font-size: 16px;
+  line-height: 2;
+  font-weight: 500;
+  border-radius: var(--radius-control);
+  border: 1px solid var(--color-hairline-strong);
+  background: transparent;
+  color: var(--color-text);
+  cursor: pointer;
+}
+
+.btn-secondary:disabled {
+  background: var(--color-surface-card);
+  cursor: not-allowed;
+}

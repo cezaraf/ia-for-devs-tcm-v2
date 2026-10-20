@@ -1,0 +1,34 @@
+<main class="weather-page">
+  <section class="weather-panel" aria-labelledby="page-title">
+    <header class="panel-header">
+      <div class="brand"><span class="brand-mark" aria-hidden="true">☀</span><span>Tempo agora</span></div>
+      <p class="updated" *ngIf="weather()">Atualizado às {{ weather()?.observedAt }}</p>
+    </header>
+    <div class="intro">
+      <p class="eyebrow">PREVISÃO ATUAL</p>
+      <h1 id="page-title">Como está o tempo por aí?</h1>
+      <p>Pesquise uma cidade para ver as condições do momento.</p>
+    </div>
+    <form class="search" (ngSubmit)="search()">
+      <label class="sr-only" for="city">Cidade</label>
+      <input id="city" name="city" [(ngModel)]="city" type="search" placeholder="Ex.: Salvador, BA" autocomplete="address-level2" [disabled]="loading()" />
+      <button type="submit" [disabled]="loading() || !city.trim()">{{ loading() ? 'Buscando...' : 'Ver clima' }}</button>
+    </form>
+    <p class="feedback error" role="alert" *ngIf="error()">{{ error() }}</p>
+    <section class="weather-card" *ngIf="weather() as result" aria-live="polite">
+      <div class="location-row">
+        <div><p class="location">{{ result.location.name }}<span *ngIf="result.location.admin1">, {{ result.location.admin1 }}</span></p><p class="country">{{ result.location.country }}</p></div>
+        <span class="condition-icon" aria-hidden="true">{{ iconFor(result.weather.code) }}</span>
+      </div>
+      <div class="temperature"><span>{{ result.weather.temperature | number:'1.0-0' }}</span><sup>°C</sup></div>
+      <p class="condition">{{ descriptionFor(result.weather.code) }}</p>
+      <p class="feels-like">Sensação térmica de {{ result.weather.apparentTemperature | number:'1.0-0' }}°C</p>
+      <div class="metrics">
+        <div class="metric"><span class="metric-icon" aria-hidden="true">💧</span><div><span>Umidade</span><strong>{{ result.weather.humidity }}%</strong></div></div>
+        <div class="metric"><span class="metric-icon" aria-hidden="true">〰</span><div><span>Vento</span><strong>{{ result.weather.windSpeed | number:'1.0-0' }} km/h</strong></div></div>
+      </div>
+    </section>
+    <section class="empty-state" *ngIf="!weather() && !loading() && !error()"><span aria-hidden="true">☁</span><p>Digite uma cidade para consultar o clima.</p></section>
+    <p class="source">Dados meteorológicos por Open-Meteo</p>
+  </section>
+</main>

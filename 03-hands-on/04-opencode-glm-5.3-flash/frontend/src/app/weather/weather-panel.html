@@ -1,0 +1,135 @@
+<div class="min-h-dvh bg-linear-to-b from-sky-950 via-slate-900 to-slate-950 text-slate-100">
+  <div class="mx-auto flex min-h-dvh w-full max-w-xl flex-col gap-6 px-4 py-10">
+    <header class="text-center">
+      <p class="text-xs font-semibold uppercase tracking-[0.3em] text-sky-300/70">Open-Meteo</p>
+      <h1 class="mt-2 text-3xl font-semibold tracking-tight">Painel do Clima</h1>
+      <p class="mt-2 text-sm text-slate-400">Digite uma cidade ou use sua localização atual.</p>
+    </header>
+
+    <form class="flex gap-2" (submit)="search()">
+      <input
+        class="h-11 w-full min-w-0 rounded-xl border border-white/10 bg-white/5 px-4 text-sm text-slate-100 placeholder:text-slate-500 focus:border-sky-400/70 focus:outline-none"
+        type="text"
+        name="city"
+        autocomplete="off"
+        placeholder="Ex.: Salvador, São Paulo, Lisboa…"
+        aria-label="Cidade"
+        [value]="city()"
+        (input)="onCityInput($event)"
+      />
+      <button
+        class="h-11 shrink-0 rounded-xl bg-sky-500 px-4 text-sm font-semibold text-white transition hover:bg-sky-400 disabled:cursor-not-allowed disabled:opacity-60"
+        type="submit"
+        [disabled]="loading()"
+      >
+        Buscar
+      </button>
+      <button
+        class="h-11 shrink-0 rounded-xl border border-white/10 bg-white/5 px-3 text-sm transition hover:bg-white/10 disabled:cursor-not-allowed disabled:opacity-60"
+        type="button"
+        title="Usar minha localização"
+        aria-label="Usar minha localização"
+        (click)="useMyLocation()"
+        [disabled]="locating()"
+      >
+        📍
+      </button>
+    </form>
+
+    @if (notice()) {
+      <p class="rounded-xl border border-amber-400/20 bg-amber-400/10 px-4 py-2 text-center text-xs text-amber-200">
+        {{ notice() }}
+      </p>
+    }
+
+    @if (weather(); as w) {
+      <article class="rounded-2xl border border-white/10 bg-white/5 p-6">
+        <div class="flex items-start justify-between gap-4">
+          <div class="min-w-0">
+            <h2 class="truncate text-xl font-semibold">{{ placeLabel() }}</h2>
+            <p class="truncate text-sm text-slate-400">{{ placeDetail() }}</p>
+          </div>
+          <span class="shrink-0 text-5xl" aria-hidden="true">
+            {{ iconFor(w.current.weatherCode, w.current.isDay) }}
+          </span>
+        </div>
+
+        <div class="mt-5 flex items-end justify-between gap-4">
+          <p class="text-6xl font-semibold tracking-tighter">
+            {{ w.current.temperature | number: '1.0-1' }}°
+          </p>
+          <div class="text-right text-sm">
+            <p class="font-medium text-slate-200">{{ descriptionFor(w.current.weatherCode) }}</p>
+            <p class="text-slate-400">Sensação térmica de {{ w.current.apparentTemperature | number: '1.0-1' }}°</p>
+          </div>
+        </div>
+
+        <dl class="mt-6 grid grid-cols-2 gap-2 text-sm sm:grid-cols-4">
+          <div class="rounded-xl border border-white/5 bg-white/5 px-3 py-2">
+            <dt class="text-[0.7rem] uppercase tracking-wide text-slate-500">Umidade</dt>
+            <dd class="mt-0.5 font-semibold">{{ w.current.humidity }}%</dd>
+          </div>
+          <div class="rounded-xl border border-white/5 bg-white/5 px-3 py-2">
+            <dt class="text-[0.7rem] uppercase tracking-wide text-slate-500">Vento</dt>
+            <dd class="mt-0.5 font-semibold">
+              {{ w.current.windSpeed | number: '1.0-0' }} km/h {{ compassFor(w.current.windDirection) }}
+            </dd>
+          </div>
+          <div class="rounded-xl border border-white/5 bg-white/5 px-3 py-2">
+            <dt class="text-[0.7rem] uppercase tracking-wide text-slate-500">Nuvens</dt>
+            <dd class="mt-0.5 font-semibold">{{ w.current.cloudCover }}%</dd>
+          </div>
+          <div class="rounded-xl border border-white/5 bg-white/5 px-3 py-2">
+            <dt class="text-[0.7rem] uppercase tracking-wide text-slate-500">Chuva</dt>
+            <dd class="mt-0.5 font-semibold">{{ w.current.precipitation | number: '1.0-1' }} mm</dd>
+          </div>
+        </dl>
+
+        <p class="mt-4 text-xs text-slate-500">
+          Atualizado às {{ w.current.observedAt.slice(11, 16) }} (hora local)
+          @if (fromGeolocation()) { · localização do navegador }
+        </p>
+      </article>
+
+      <section>
+        <h3 class="text-xs font-semibold uppercase tracking-widest text-slate-500">Próximos dias</h3>
+        <div class="mt-3 grid grid-cols-5 gap-2">
+          @for (day of w.daily; track day.date) {
+            <div class="rounded-xl border border-white/10 bg-white/5 px-1 py-3 text-center">
+              <p class="text-xs capitalize text-slate-400">{{ weekdayFor(day.date) }}</p>
+              <p class="my-1 text-2xl" aria-hidden="true">{{ iconFor(day.weatherCode) }}</p>
+              <p class="text-sm font-semibold">{{ day.tempMax | number: '1.0-0' }}°</p>
+              <p class="text-xs text-slate-500">{{ day.tempMin | number: '1.0-0' }}°</p>
+              @if (day.precipitationProbability !== null) {
+                <p class="mt-1 text-[0.65rem] text-sky-300/80">💧 {{ day.precipitationProbability }}%</p>
+              }
+            </div>
+          }
+        </div>
+      </section>
+    } @else if (loading() || locating()) {
+      <div class="flex flex-col items-center gap-3 rounded-2xl border border-white/10 bg-white/5 px-6 py-12 text-sm text-slate-300">
+        <span class="size-6 animate-spin rounded-full border-2 border-sky-300/30 border-t-sky-300"></span>
+        @if (locating()) {
+          <span>Obtendo sua localização…</span>
+        } @else {
+          <span>Consultando o clima…</span>
+        }
+      </div>
+    } @else if (error()) {
+      <div class="rounded-2xl border border-rose-400/20 bg-rose-400/10 px-6 py-8 text-center text-sm text-rose-200">
+        <p class="text-2xl" aria-hidden="true">🛰️</p>
+        <p class="mt-2">{{ error() }}</p>
+      </div>
+    } @else {
+      <div class="rounded-2xl border border-dashed border-white/15 px-6 py-12 text-center text-sm text-slate-400">
+        <p class="text-3xl" aria-hidden="true">🌤️</p>
+        <p class="mt-3">Digite o nome de uma cidade para ver o clima atual.</p>
+      </div>
+    }
+
+    <footer class="mt-auto text-center text-xs text-slate-600">
+      Dados obtidos pelo backend via Open-Meteo — sem API key.
+    </footer>
+  </div>
+</div>

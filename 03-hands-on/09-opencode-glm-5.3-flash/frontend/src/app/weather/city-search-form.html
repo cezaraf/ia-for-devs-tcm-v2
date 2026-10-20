@@ -1,0 +1,22 @@
+<form class="form" (submit)="onSubmit($event)">
+  <label class="label" for="city-input">cidade</label>
+  <div class="row">
+    <input
+      #cityInput
+      id="city-input"
+      class="input"
+      type="text"
+      name="cidade"
+      autocomplete="off"
+      spellcheck="false"
+      [value]="city()"
+      (input)="onInput($event)"
+    />
+    <button class="button primary" type="submit" [disabled]="busy()">buscar</button>
+    @if (canLocate()) {
+      <button class="button secondary" type="button" [disabled]="busy()" (click)="onLocate()">
+        [usar minha localização]
+      </button>
+    }
+  </div>
+</form>

@@ -1,0 +1,16 @@
+# Dependências
+node_modules/
+
+# Segredos
+.env
+.env.*
+!.env.example
+
+# Build / cache
+target/
+dist/
+.angular/
+coverage/
+
+# SO / editores
+.DS_Store

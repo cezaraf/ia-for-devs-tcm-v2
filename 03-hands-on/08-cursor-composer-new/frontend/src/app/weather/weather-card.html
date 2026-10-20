@@ -1,0 +1,15 @@
+<article class="card">
+  <header class="card-header">
+    <h2 class="location">{{ locationLabel() }}</h2>
+    <span class="badge">{{ dayBadge() }}</span>
+  </header>
+  <p class="temperature">{{ temperature() }}°C</p>
+  <p class="condition">{{ weather().condition }}</p>
+  <div class="details">
+    <p class="detail">[+] sensação  {{ apparent() }}°C</p>
+    <p class="detail">[+] umidade  {{ weather().relativeHumidity }}%</p>
+    <p class="detail">[+] vento  {{ weather().windSpeed }} km/h {{ weather().windDirectionCardinal }}</p>
+    <p class="detail">[+] precipitação  {{ precipitation() }} mm</p>
+  </div>
+  <footer class="footer">medido às {{ observedTime() }} (hora local)</footer>
+</article>

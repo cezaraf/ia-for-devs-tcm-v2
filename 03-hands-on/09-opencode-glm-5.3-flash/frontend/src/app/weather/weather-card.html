@@ -1,0 +1,14 @@
+<article class="card">
+  <header class="header">
+    <h2 class="label">{{ label() }}</h2>
+    <span class="badge">{{ badge() }}</span>
+  </header>
+  <p class="temperature">{{ temperature() }}</p>
+  <p class="condition">{{ weather().condition }}</p>
+  <ul class="details">
+    @for (detail of details(); track detail) {
+      <li class="detail">{{ detail }}</li>
+    }
+  </ul>
+  <footer class="footer">{{ measuredAt() }}</footer>
+</article>

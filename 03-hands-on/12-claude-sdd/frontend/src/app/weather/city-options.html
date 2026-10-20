@@ -1,0 +1,10 @@
+<p class="title">{{ title() }}</p>
+<ul class="list">
+  @for (option of options(); track option.city.id) {
+    <li class="item">
+      <button #option class="option" type="button" (click)="selected.emit(option.city)">
+        {{ option.label }}
+      </button>
+    </li>
+  }
+</ul>

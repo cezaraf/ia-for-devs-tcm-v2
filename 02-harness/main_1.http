@@ -1,0 +1,21 @@
+@baseUrl = https://openrouter.ai/api/v1
+@model = {{$dotenv OPENROUTER_MODEL}}
+
+
+POST {{baseUrl}}/chat/completions
+Authorization: Bearer {{$dotenv OPENROUTER_API_KEY}}
+Content-Type: application/json
+
+{
+  "model": "{{model}}",
+  "messages": [
+    {
+      "role": "system",
+      "content": "<regras>"
+    },
+    {
+      "role": "user",
+      "content": "Corrija o arquivo helloWorld.js"
+    }
+  ]
+}

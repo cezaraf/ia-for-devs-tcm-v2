@@ -1,0 +1,41 @@
+<main class="panel" [attr.data-theme]="theme()">
+  <div class="container">
+    <h1 class="title">Painel de clima</h1>
+    <app-city-search-form
+      [geolocationAvailable]="geolocationAvailable()"
+      [busy]="busy()"
+      [invalidMessage]="invalidMessage()"
+      (search)="onSearch($event)"
+      (useLocation)="onUseLocation()"
+    />
+    <section class="result" aria-live="polite" [attr.aria-busy]="busy()">
+      @switch (state()) {
+        @case ('idle') {
+          <app-status-message [message]="idleMessage.text" [kind]="idleMessage.kind" />
+        }
+        @case ('loading') {
+          <app-weather-skeleton />
+        }
+        @case ('choosing') {
+          <app-city-options [cities]="cities()" (selected)="onSelect($event)" />
+        }
+        @case ('success') {
+          @if (weather(); as current) {
+            <app-weather-card [weather]="current" [locationLabel]="locationLabel() ?? ''" />
+          }
+        }
+        @case ('invalid') {}
+        @default {
+          @if (failure(); as f) {
+            <app-status-message
+              [message]="f.text"
+              [kind]="f.kind"
+              [retryable]="f.retryable"
+              (retry)="onRetry()"
+            />
+          }
+        }
+      }
+    </section>
+  </div>
+</main>

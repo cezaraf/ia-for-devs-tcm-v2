@@ -1,0 +1,14 @@
+<article class="card">
+  <header class="head">
+    <h2 class="label">{{ label() }}</h2>
+    <span class="badge">{{ badge() }}</span>
+  </header>
+  <p class="temperature">{{ temperature() }}°C</p>
+  <p class="condition">{{ weather().condition }}</p>
+  <ul class="details">
+    @for (line of details(); track line.key) {
+      <li class="detail">{{ line.text }}</li>
+    }
+  </ul>
+  <p class="footer">medido às {{ time() }} (hora local)</p>
+</article>

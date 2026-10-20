@@ -1,0 +1,23 @@
+<form class="form" (ngSubmit)="onSubmit()">
+  <label class="field" for="city-input">
+    <span class="label">cidade</span>
+    <input
+      #cityInput
+      id="city-input"
+      name="city"
+      type="text"
+      class="input"
+      [disabled]="disabled()"
+      [(ngModel)]="cityName"
+      autocomplete="off"
+    />
+  </label>
+  <div class="actions">
+    <button type="submit" class="btn-primary" [disabled]="disabled()">buscar</button>
+    @if (geolocationAvailable()) {
+      <button type="button" class="btn-secondary" [disabled]="disabled()" (click)="onUseLocation()">
+        [usar minha localização]
+      </button>
+    }
+  </div>
+</form>

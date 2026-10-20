@@ -1,0 +1,125 @@
+@baseUrl = https://openrouter.ai/api/v1
+@model = {{$dotenv OPENROUTER_MODEL}}
+@prompt = Liste os arquivos do diretório atual e leia o conteúdo do package.json
+
+
+POST {{baseUrl}}/chat/completions
+Authorization: Bearer {{$dotenv OPENROUTER_API_KEY}}
+Content-Type: application/json
+
+{
+  "model": "{{model}}",
+  "messages": [
+    {
+      "role": "user",
+      "content": "{{prompt}}"
+    }
+  ],
+  "tools": [
+    {
+      "type": "function",
+      "function": {
+        "name": "listDirectory",
+        "description": "List files in a directory",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "path": {
+              "type": "string",
+              "description": "Directory path to list"
+            }
+          },
+          "required": ["path"]
+        }
+      }
+    },
+    {
+      "type": "function",
+      "function": {
+        "name": "readFile",
+        "description": "Read contents of a file",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "path": {
+              "type": "string",
+              "description": "File path to read"
+            }
+          },
+          "required": ["path"]
+        }
+      }
+    },
+    {
+      "type": "function",
+      "function": {
+        "name": "createFile",
+        "description": "Create a new file with content",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "path": {
+              "type": "string",
+              "description": "File path to create"
+            },
+            "content": {
+              "type": "string",
+              "description": "Content to write"
+            }
+          },
+          "required": ["path", "content"]
+        }
+      }
+    },
+    {
+      "type": "function",
+      "function": {
+        "name": "editFile",
+        "description": "Edit an existing file by replacing old content with new content",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "path": {
+              "type": "string",
+              "description": "File path to edit"
+            },
+            "oldContent": {
+              "type": "string",
+              "description": "Content to replace"
+            },
+            "newContent": {
+              "type": "string",
+              "description": "New content"
+            }
+          },
+          "required": ["path", "oldContent", "newContent"]
+        }
+      }
+    },
+    {
+      "type": "function",
+      "function": {
+        "name": "bash",
+        "description": "Execute a bash command and return stdout, stderr, and exit code. Use this to run tests, builds, git commands, or verify results.",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "command": {
+              "type": "string",
+              "description": "The bash command to execute"
+            },
+            "cwd": {
+              "type": "string",
+              "description": "Working directory (defaults to current directory)"
+            },
+            "timeout": {
+              "type": "number",
+              "description": "Timeout in milliseconds (defaults to 30000)"
+            }
+          },
+          "required": ["command"]
+        }
+      }
+    }
+  ]
+}

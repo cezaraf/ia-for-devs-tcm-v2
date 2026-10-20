@@ -1,0 +1,39 @@
+.message {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-4);
+  border-radius: var(--radius-container);
+}
+
+.text {
+  margin: 0;
+  font-size: 16px;
+  line-height: 1.5;
+  color: var(--color-text);
+}
+
+.marker {
+  color: var(--color-danger);
+}
+
+.button {
+  height: 40px;
+  padding: var(--space-1) 20px;
+  font-family: inherit;
+  font-size: 16px;
+  line-height: 2;
+  font-weight: 500;
+  color: var(--color-text);
+  background: transparent;
+  border: 1px solid var(--color-hairline-strong);
+  border-radius: var(--radius-control);
+  cursor: pointer;
+}
+
+.button:disabled {
+  background: var(--color-surface-card);
+  color: var(--color-text-mute);
+  border-color: var(--color-hairline);
+  cursor: default;
+}

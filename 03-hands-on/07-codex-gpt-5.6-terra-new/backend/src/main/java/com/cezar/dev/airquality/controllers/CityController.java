@@ -1,0 +1,2 @@
+package com.cezar.dev.airquality.controllers; import com.cezar.dev.airquality.dtos.CityResponse; import com.cezar.dev.airquality.services.CityService; import java.util.List; import org.springframework.web.bind.annotation.*;
+@RestController public class CityController { private final CityService service; public CityController(CityService service){this.service=service;} @GetMapping("/cities") public List<CityResponse> cities(@RequestParam(required=false) String name){return service.search(name);} }

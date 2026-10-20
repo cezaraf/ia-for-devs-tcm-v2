@@ -1,0 +1,43 @@
+<div class="panel" [attr.data-theme]="theme()">
+  <main class="container">
+    <h1 class="title">[clima]</h1>
+
+    <app-city-search-form
+      [disabled]="busy()"
+      [focusRequest]="focusRequest()"
+      (searchSubmitted)="onSearch($event)"
+      (locateRequested)="onLocate()"
+    />
+
+    <section class="result" aria-live="polite" [attr.aria-busy]="busy()">
+      @switch (state()) {
+        @case ('idle') {
+          <p class="hint">digite uma cidade para ver o clima atual</p>
+        }
+        @case ('searching') {
+          <app-weather-card-skeleton />
+        }
+        @case ('loading') {
+          <app-weather-card-skeleton />
+        }
+        @case ('choosing') {
+          <app-city-list [cities]="cities()" (citySelected)="onCitySelected($event)" />
+        }
+        @case ('success') {
+          @if (weather(); as current) {
+            <app-weather-card [weather]="current" [label]="label()" />
+          }
+        }
+        @case ('error') {
+          @if (error(); as current) {
+            <app-error-message
+              [message]="current.message"
+              [retryable]="current.retryable"
+              (retry)="onRetry()"
+            />
+          }
+        }
+      }
+    </section>
+  </main>
+</div>

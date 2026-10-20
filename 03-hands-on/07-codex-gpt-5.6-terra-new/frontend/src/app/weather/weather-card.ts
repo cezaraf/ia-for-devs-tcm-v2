@@ -1,0 +1,2 @@
+import { Component, input } from '@angular/core'; import { DecimalPipe } from '@angular/common'; import { City, Weather } from './weather-api';
+@Component({selector:'app-weather-card',imports:[DecimalPipe],templateUrl:'./weather-card.html',styleUrl:'./weather-card.css'}) export class WeatherCard { weather=input.required<Weather>(); city=input<City|null>(null); location=input(false); place(){const c=this.city();return this.location()?'Sua localização':[c?.name,c?.admin1,c?.country].filter(Boolean).join(', ');} time(){return this.weather().observedAt.slice(11,16);} }

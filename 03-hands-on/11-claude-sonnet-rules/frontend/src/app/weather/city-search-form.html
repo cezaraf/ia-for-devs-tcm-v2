@@ -1,0 +1,12 @@
+<form class="form" (submit)="submit($event)">
+  <label class="label" for="city">cidade</label>
+  <div class="row">
+    <input #field id="city" name="city" type="text" class="input" autocomplete="off" />
+    <button type="submit" class="btn primary" [disabled]="busy()">buscar</button>
+    @if (geolocationAvailable()) {
+      <button type="button" class="btn secondary" [disabled]="busy()" (click)="locate.emit()">
+        [usar minha localização]
+      </button>
+    }
+  </div>
+</form>

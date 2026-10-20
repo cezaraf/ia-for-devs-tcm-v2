@@ -1,0 +1,16 @@
+<article class="card">
+  <header class="header">
+    <h2 class="title">{{ locationLabel() }}</h2>
+    @if (badge(); as badge) {
+      <span class="badge">{{ badge }}</span>
+    }
+  </header>
+  <p class="temperature">{{ temperature() }}</p>
+  <p class="condition">{{ weather().condition }}</p>
+  <dl class="details">
+    <div class="row"><dt>Sensação</dt><dd>{{ apparent() }}</dd></div>
+    <div class="row"><dt>Umidade</dt><dd>{{ humidity() }}</dd></div>
+    <div class="row"><dt>Vento</dt><dd>{{ wind() }}</dd></div>
+  </dl>
+  <p class="observed">Medido às {{ observedTime() }} (horário local)</p>
+</article>

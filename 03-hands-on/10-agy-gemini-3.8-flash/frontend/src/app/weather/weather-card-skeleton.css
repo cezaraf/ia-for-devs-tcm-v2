@@ -1,0 +1,96 @@
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+.weather-card-skeleton {
+  min-height: 320px;
+  padding: 48px 32px;
+  box-sizing: border-box;
+  background-color: var(--color-card-bg);
+  border: var(--card-border);
+  border-radius: var(--radius-container);
+  display: flex;
+  flex-direction: column;
+}
+
+.skeleton-block {
+  background-color: var(--color-surface-card);
+  border-radius: var(--radius-control);
+  animation: pulse 1.2s infinite ease-in-out;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .skeleton-block {
+    animation: none;
+  }
+}
+
+.skeleton-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--space-16);
+  margin-bottom: var(--space-24);
+}
+
+.skeleton-location {
+  height: 24px;
+  width: 200px;
+}
+
+.skeleton-badge {
+  height: 28px;
+  width: 72px;
+}
+
+.skeleton-temp-section {
+  margin-bottom: var(--space-24);
+}
+
+.skeleton-temperature {
+  height: 48px;
+  width: 140px;
+  margin-bottom: var(--space-8);
+}
+
+.skeleton-condition {
+  height: 24px;
+  width: 180px;
+}
+
+.skeleton-details-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--space-16);
+  margin-bottom: var(--space-32);
+}
+
+.skeleton-detail-line {
+  height: 32px;
+  width: 100%;
+}
+
+.skeleton-footer {
+  margin-top: auto;
+}
+
+.skeleton-footer-line {
+  height: 20px;
+  width: 240px;
+}
+
+@media (max-width: 639px) {
+  .weather-card-skeleton {
+    padding: 24px 16px;
+  }
+
+  .skeleton-details-grid {
+    grid-template-columns: 1fr;
+    gap: var(--space-8);
+  }
+}

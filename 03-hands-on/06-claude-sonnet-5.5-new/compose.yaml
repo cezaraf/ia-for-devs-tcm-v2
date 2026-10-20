@@ -1,0 +1,95 @@
+# Ambiente de desenvolvimento do template (air-quality): backend + frontend, código montado
+# por bind mount (edição no host recarrega no container). Mesmo desenho do lavie.
+#
+# Publicado pelo Traefik da VPS (rede edge):
+#   https://test.cezar.dev/<VERSION>/             -> frontend (ng serve)
+#   https://test.cezar.dev/<VERSION>/api/...      -> backend (sem o prefixo /<VERSION>/api)
+#       ex.: https://test.cezar.dev/01/api/healthcheck
+#
+# Várias versões lado a lado: tudo que é global (nome do projeto, routers/middlewares/services do
+# Traefik, prefixo da URL) deriva de VERSION. Cada versão sobe com o seu valor, sem colidir:
+#   VERSION=01 docker compose up -d      (ou VERSION=02 em outra cópia/pasta; padrão: 01)
+# Subir: docker compose up -d  (sem `ports:`).
+
+name: airquality-template-${VERSION:-06}
+
+services:
+  # Volume nomeado nasce do root; o backend roda como 1001.
+  volumes-init:
+    image: busybox:1.36
+    command: chown -R 1001:1001 /m2
+    volumes:
+      - m2:/m2
+    mem_limit: 32m
+    restart: "no"
+
+  backend:
+    image: maven:3.9-eclipse-temurin-25
+    working_dir: /app
+    user: "1001:1001"
+    environment:
+      HOME: /tmp
+      JAVA_TOOL_OPTIONS: -Duser.timezone=America/Bahia
+      # O Traefik remove o prefixo e manda X-Forwarded-*; o Spring os respeita.
+      SPRING_APPLICATION_JSON: '{"server.forward-headers-strategy": "framework"}'
+    command: >-
+      mvn -B -Dmaven.repo.local=/m2
+      spring-boot:run -Dspring-boot.run.jvmArguments=-Xmx512m
+    volumes:
+      - ./backend:/app
+      - m2:/m2
+    networks: [default, edge]
+    labels:
+      - "traefik.enable=true"
+      - "traefik.docker.network=edge"
+      - "traefik.http.routers.template-${VERSION:-06}-api.rule=Host(`test.cezar.dev`) && PathPrefix(`/${VERSION:-06}/api`)"
+      - "traefik.http.routers.template-${VERSION:-06}-api.entrypoints=web"
+      - "traefik.http.routers.template-${VERSION:-06}-api.middlewares=template-${VERSION:-06}-api-strip,template-${VERSION:-06}-https"
+      - "traefik.http.middlewares.template-${VERSION:-06}-api-strip.stripprefix.prefixes=/${VERSION:-06}/api"
+      # O tunnel entrega em http; sem isso os links gerados sairiam em http.
+      - "traefik.http.middlewares.template-${VERSION:-06}-https.headers.customrequestheaders.X-Forwarded-Proto=https"
+      - "traefik.http.services.template-${VERSION:-06}-api.loadbalancer.server.port=8080"
+    depends_on:
+      volumes-init:
+        condition: service_completed_successfully
+    mem_limit: 1g
+    restart: unless-stopped
+
+  frontend:
+    image: node:22-bookworm-slim
+    working_dir: /app
+    user: "1001:1001"
+    environment:
+      HOME: /tmp
+      npm_config_cache: /tmp/.npm
+      NODE_OPTIONS: --max-old-space-size=1536
+      VERSION: ${VERSION:-06}
+    # Configuração "template" do angular.json: baseHref e allowedHosts (sem isso, 403 "Blocked request").
+    # O ng serve não aceita --base-href, então o baseHref da configuração é alinhado a VERSION ao subir.
+    command:
+      - sh
+      - -c
+      - |
+        [ -d node_modules ] || npm ci
+        sed -i -E 's|("baseHref": ")[^"]*|\1/'"$${VERSION}"'/|' angular.json
+        exec npx ng serve -c template --host 0.0.0.0 --port 4200 --serve-path "/$${VERSION}/"
+    volumes:
+      - ./frontend:/app
+    networks: [default, edge]
+    labels:
+      - "traefik.enable=true"
+      - "traefik.docker.network=edge"
+      - "traefik.http.routers.template-${VERSION:-06}.rule=Host(`test.cezar.dev`) && PathPrefix(`/${VERSION:-06}`)"
+      - "traefik.http.routers.template-${VERSION:-06}.entrypoints=web"
+      - "traefik.http.services.template-${VERSION:-06}.loadbalancer.server.port=4200"
+    depends_on:
+      - backend
+    mem_limit: 2g
+    restart: unless-stopped
+
+volumes:
+  m2:
+
+networks:
+  edge:
+    external: true

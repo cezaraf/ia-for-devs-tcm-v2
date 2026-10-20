@@ -1,0 +1,9 @@
+<div class="error" role="alert">
+  <p class="error-text">
+    <span class="error-marker" aria-hidden="true">[x]</span>
+    {{ message() }}
+  </p>
+  @if (showRetry()) {
+    <button type="button" class="btn-secondary" (click)="retry.emit()">tentar novamente</button>
+  }
+</div>

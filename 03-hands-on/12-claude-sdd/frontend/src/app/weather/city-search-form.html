@@ -1,0 +1,25 @@
+<form class="form" (submit)="submit($event)">
+  <div class="field">
+    <label class="label" for="city-name">Cidade</label>
+    <input
+      #field
+      class="input"
+      id="city-name"
+      type="text"
+      autocomplete="address-level2"
+      [attr.aria-invalid]="invalidMessage() ? 'true' : null"
+      [attr.aria-describedby]="invalidMessage() ? 'city-name-error' : null"
+    />
+  </div>
+  <div class="actions">
+    <button class="button primary" type="submit">Buscar</button>
+    @if (geolocationAvailable()) {
+      <button class="button secondary" type="button" (click)="useLocation.emit()">
+        Usar minha localização
+      </button>
+    }
+  </div>
+  @if (invalidMessage(); as message) {
+    <p class="error" id="city-name-error" role="alert">{{ message }}</p>
+  }
+</form>

@@ -1,0 +1,24 @@
+services:
+  postgres:
+    image: postgres:16.4-alpine
+    container_name: sqp-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: sqp
+      POSTGRES_PASSWORD: sqp_pwd
+      POSTGRES_DB: sqp
+      POSTGRES_HOST_AUTH_METHOD: scram-sha-256
+      POSTGRES_INITDB_ARGS: "--auth-host=scram-sha-256"
+    ports:
+      - "5432:5432"
+    volumes:
+      - sqp_data:/var/lib/postgresql/data
+      - ./sql:/docker-entrypoint-initdb.d:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U sqp -d sqp"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  sqp_data:

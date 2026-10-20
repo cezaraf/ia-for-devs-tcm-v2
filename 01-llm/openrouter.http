@@ -1,0 +1,18 @@
+@baseUrl = https://openrouter.ai/api/v1
+@model = x-ai/grok-4.7
+
+
+POST {{baseUrl}}/chat/completions
+Authorization: Bearer {{$dotenv OPENROUTER_API_KEY}}
+Content-Type: application/json
+
+{
+  "model": "{{model}}",
+  "messages": [
+    {
+      "role": "user",
+      "content": "Explique com poucas palavras o que é um token em IA."
+    }
+  ],
+  "stream": false
+}

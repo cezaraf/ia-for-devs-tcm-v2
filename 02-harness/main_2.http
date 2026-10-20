@@ -1,0 +1,79 @@
+@baseUrl = https://openrouter.ai/api/v1
+@model = {{$dotenv OPENROUTER_MODEL}}
+
+
+# @name firstResponse
+POST {{baseUrl}}/chat/completions
+Authorization: Bearer {{$dotenv OPENROUTER_API_KEY}}
+Content-Type: application/json
+
+{
+  "model": "{{model}}",
+  "messages": [
+    {
+      "role": "user",
+      "content": "List files in the current directory using your tool."
+    }
+  ],
+  "tools": [
+    {
+      "type": "function",
+      "function": {
+        "name": "list_dir",
+        "description": "List file and folder names for a given directory path",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "path": {
+              "type": "string",
+              "description": "Absolute or relative directory path"
+            }
+          },
+          "required": ["path"]
+        }
+      }
+    }
+  ]
+}
+
+###
+
+POST {{baseUrl}}/chat/completions
+Authorization: Bearer {{$dotenv OPENROUTER_API_KEY}}
+Content-Type: application/json
+
+{
+  "model": "{{model}}",
+  "messages": [
+    {
+      "role": "user",
+      "content": "List files in the current directory using your tool."
+    },
+    {{firstResponse.response.body.$.choices[0].message}},
+    {
+      "role": "tool",
+      "tool_call_id": "{{firstResponse.response.body.$.choices[0].message.tool_calls[0].id}}",
+      "name": "list_dir",
+      "content": "[{\"name\":\"main_2.ts\",\"type\":\"file\"}]"
+    }
+  ],
+  "tools": [
+    {
+      "type": "function",
+      "function": {
+        "name": "list_dir",
+        "description": "List file and folder names for a given directory path",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "path": {
+              "type": "string",
+              "description": "Absolute or relative directory path"
+            }
+          },
+          "required": ["path"]
+        }
+      }
+    }
+  ]
+}

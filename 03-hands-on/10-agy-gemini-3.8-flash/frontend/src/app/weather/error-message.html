@@ -1,0 +1,11 @@
+<div class="error-container" role="alert">
+  <div class="error-content">
+    <span class="error-marker">[x]</span>
+    <span class="error-text">{{ message() }}</span>
+  </div>
+  @if (canRetry()) {
+    <button type="button" class="btn-secondary" (click)="onRetryClick()">
+      tentar novamente
+    </button>
+  }
+</div>

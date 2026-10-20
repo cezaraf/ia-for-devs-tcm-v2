@@ -1,0 +1,75 @@
+<section class="weather-panel" aria-labelledby="weather-title">
+  <header class="weather-header">
+    <h1 id="weather-title">Clima</h1>
+    <p class="subtitle">Consulte o tempo atual em qualquer cidade.</p>
+  </header>
+
+  <form class="search-form" (ngSubmit)="search()">
+    <label class="sr-only" for="city-input">Cidade</label>
+    <input
+      id="city-input"
+      name="city"
+      type="search"
+      [(ngModel)]="cityQuery"
+      placeholder="Ex.: Salvador, Lisboa, Tokyo"
+      autocomplete="off"
+      [disabled]="loading()"
+    />
+    <button type="submit" [disabled]="loading()">
+      @if (loading()) {
+        Buscando…
+      } @else {
+        Buscar
+      }
+    </button>
+    <button type="button" class="secondary" (click)="useMyLocation()" [disabled]="loading()">
+      Usar minha localização
+    </button>
+  </form>
+
+  @if (geoHint()) {
+    <p class="hint" role="status">{{ geoHint() }}</p>
+  }
+
+  @if (error()) {
+    <p class="error" role="alert">{{ error() }}</p>
+  }
+
+  @if (weather(); as w) {
+    <article class="weather-card">
+      <div class="location">
+        <h2>{{ w.city }}</h2>
+        <p class="region">
+          @if (w.admin1) {
+            {{ w.admin1 }}
+            @if (w.country) {
+              · {{ w.country }}
+            }
+          } @else if (w.country) {
+            {{ w.country }}
+          }
+        </p>
+      </div>
+
+      <p class="temperature" aria-label="Temperatura atual">
+        {{ w.temperatureCelsius | number: '1.0-1' }}°C
+      </p>
+      <p class="condition">{{ w.weatherDescription }}</p>
+
+      <dl class="metrics">
+        <div>
+          <dt>Umidade</dt>
+          <dd>{{ w.relativeHumidityPercent }}%</dd>
+        </div>
+        <div>
+          <dt>Vento</dt>
+          <dd>{{ w.windSpeedKmh | number: '1.0-1' }} km/h</dd>
+        </div>
+        <div>
+          <dt>Atualizado</dt>
+          <dd>{{ w.observedAt }}</dd>
+        </div>
+      </dl>
+    </article>
+  }
+</section>

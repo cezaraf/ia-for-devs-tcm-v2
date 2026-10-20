@@ -1,0 +1,9 @@
+<ul class="list">
+  @for (city of cities(); track city.id) {
+    <li class="item">
+      <button #firstItem class="city-button" type="button" (click)="select.emit(city)">
+        [+] {{ label(city) }}
+      </button>
+    </li>
+  }
+</ul>

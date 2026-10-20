@@ -1,0 +1,22 @@
+<article class="weather-card">
+  <div class="card-header">
+    <h2 class="location-label">{{ locationLabel() }}</h2>
+    <span class="badge">{{ badgeText() }}</span>
+  </div>
+
+  <div class="temp-section">
+    <div class="temperature">{{ temperature() }}</div>
+    <div class="condition">{{ weather().condition }}</div>
+  </div>
+
+  <div class="details-grid">
+    <div class="detail-line">{{ apparentTempLine() }}</div>
+    <div class="detail-line">{{ humidityLine() }}</div>
+    <div class="detail-line">{{ windLine() }}</div>
+    <div class="detail-line">{{ precipitationLine() }}</div>
+  </div>
+
+  <footer class="card-footer">
+    medido às {{ observedTime() }} (hora local)
+  </footer>
+</article>

@@ -1,0 +1,11 @@
+<div class="message" [attr.role]="kind() === 'error' ? 'alert' : null">
+  <p class="text">
+    <span class="marker" [class.error]="kind() === 'error'" aria-hidden="true">{{
+      kind() === 'error' ? '[x]' : '[i]'
+    }}</span>
+    {{ message() }}
+  </p>
+  @if (retryable()) {
+    <button class="button" type="button" (click)="retry.emit()">{{ retryLabel }}</button>
+  }
+</div>

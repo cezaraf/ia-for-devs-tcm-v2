@@ -1,0 +1,6 @@
+<div class="error" role="alert">
+  <p class="text"><span class="marker">[x]</span> {{ message() }}</p>
+  @if (retryable()) {
+    <button type="button" class="btn" (click)="retry.emit()">tentar novamente</button>
+  }
+</div>

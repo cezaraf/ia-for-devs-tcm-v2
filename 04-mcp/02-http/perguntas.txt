@@ -1,0 +1,143 @@
+PERGUNTAS PARA A LLM CONECTADA AO MCP SQP
+=========================================
+
+Orientação geral
+----------------
+Para cada pergunta, peça à LLM que consulte o banco por meio da ferramenta
+execute_query, mostre a SQL utilizada e só então explique o resultado. O MCP
+aceita apenas SELECT/WITH, limita a resposta a 500 linhas e possui timeout de
+30 segundos.
+
+
+NÍVEL 1 — CONSULTAS BÁSICAS
+---------------------------
+
+1. Quais tabelas de negócio estão disponíveis no banco SQP e para que serve cada uma?
+
+2. Liste o código, o nome, a cidade e a UF de todos os clientes, ordenados por nome.
+
+3. Quais produtos estão ativos? Mostre código, descrição, unidade, estoque e custo padrão.
+
+4. Existe algum produto inativo ou descontinuado? Qual é sua situação de estoque e custo?
+
+5. Quais são os centros de trabalho e qual é a capacidade diária, em horas, de cada um?
+
+6. Liste todos os equipamentos com TAG, nome, fabricante, centro de trabalho e status.
+
+7. Há algum equipamento em manutenção? Informe onde ele está instalado e desde quando.
+
+8. Quais ordens de produção estão abertas, em produção ou pausadas? Ordene primeiro pela prioridade mais urgente e depois pela data de entrega.
+
+9. Mostre os detalhes da ordem OP-2024-0004, incluindo cliente, produto, quantidade planejada, quantidade produzida, status, prioridade e entrega.
+
+10. Quais notas fiscais foram emitidas em maio de 2024? Mostre número, tipo, status, cliente ou documento do parceiro e valor total.
+
+
+NÍVEL 2 — FILTROS, JOINS E AGREGAÇÕES
+------------------------------------
+
+11. Quantos clientes existem em cada UF? Ordene da maior para a menor quantidade.
+
+12. Quantos produtos ativos existem por unidade de medida e qual é o valor de estoque de cada grupo, calculado por estoque vezes custo padrão?
+
+13. Qual é o valor total do estoque por produto? Mostre também a participação percentual de cada produto no valor total do estoque.
+
+14. Quantas ordens existem em cada status e qual é a soma das quantidades planejadas e produzidas em cada grupo?
+
+15. Para cada ordem ainda não concluída nem cancelada, calcule a quantidade restante e o percentual já produzido. Evite divisão por zero.
+
+16. Quais clientes possuem ordens de produção e quantas ordens cada um possui? Inclua também clientes sem ordens.
+
+17. Quais produtos acabados aparecem em mais de uma ordem de produção? Mostre quantidade de ordens e quantidade total planejada.
+
+18. Liste os materiais e embalagens da ordem OP-2024-0011, com código, descrição, tipo, quantidade, unidade, estoque atual e custo padrão.
+
+19. Quais recursos estão vinculados a cada centro de trabalho? Separe mão de obra de equipamento e mostre o custo por hora.
+
+20. Qual foi o faturamento mensal de notas de SAIDA em 2024, considerando somente notas EMITIDAS? Mostre quantidade de notas e valor total por mês.
+
+
+NÍVEL 3 — ANÁLISE GERENCIAL
+----------------------------
+
+21. Quais são os clientes com maior faturamento em notas de SAIDA EMITIDAS? Mostre um ranking, o número de notas e o valor total por cliente.
+
+22. Qual é o ticket médio das notas de SAIDA EMITIDAS por cliente? Inclua clientes sem faturamento, com valor zero.
+
+23. Quais produtos geraram mais receita em notas de SAIDA EMITIDAS? Mostre quantidade vendida, receita e preço médio ponderado por produto.
+
+24. Para cada produto vendido, compare o preço médio ponderado de saída com o custo padrão atual e calcule uma margem bruta unitária e percentual estimada. Deixe claro que se trata de uma estimativa, não de margem contábil.
+
+25. Quais ordens estavam atrasadas em 31/05/2024? Considere atrasada a ordem cuja entrega era anterior a essa data e cujo status não era CONCLUIDA nem CANCELADA.
+
+26. Monte um ranking de urgência das ordens pendentes em 31/05/2024, considerando prioridade, data de entrega, percentual ainda não produzido e status. Explique o critério usado.
+
+27. Para cada ordem que possui roteiro, mostre a operação atual ou, se nenhuma estiver em execução, a próxima operação pendente, com centro de trabalho e recurso alocado.
+
+28. Quais operações pendentes ou em execução estão sem recurso alocado? Informe ordem, sequência, operação, centro e período previsto.
+
+29. Compare a duração prevista com a duração real das operações concluídas. Mostre o desvio em minutos e classifique cada uma como adiantada, no prazo ou atrasada.
+
+30. Qual é o atraso médio de término das operações concluídas por centro de trabalho? Considere atraso negativo como adiantamento e apresente também a quantidade de operações analisadas.
+
+
+NÍVEL 4 — SQL ANALÍTICA E PLANEJAMENTO
+--------------------------------------
+
+31. Usando uma função de janela, faça o ranking dos clientes por faturamento dentro de cada UF, considerando apenas notas de SAIDA EMITIDAS.
+
+32. Mostre a evolução do faturamento por data em 2024 e calcule o faturamento acumulado com uma função de janela, excluindo notas canceladas e notas de entrada.
+
+33. Para cada nota de SAIDA EMITIDA, mostre seu valor, o faturamento total do cliente e a participação percentual daquela nota no total do cliente.
+
+34. Calcule o lead time das ordens concluídas como a diferença entre a emissão da ordem e o último fim real de suas operações. Mostre também a média por produto.
+
+35. Estime a carga planejada, em horas, de cada centro para as operações pendentes ou em execução. Use setup mais tempo unitário vezes a quantidade restante da respectiva operação e explicite essa premissa.
+
+36. Compare a carga estimada de cada centro com sua capacidade diária e calcule quantos dias de capacidade seriam necessários. Não assuma recursos ou turnos além do que está cadastrado.
+
+37. Identifique o provável gargalo produtivo pela maior razão entre carga estimada e capacidade diária. Mostre os componentes do cálculo e explique as limitações da estimativa.
+
+38. Estime o custo real de recurso das operações concluídas que possuem recurso alocado, usando duração real em horas vezes custo por hora. Resuma por ordem, centro e tipo de recurso.
+
+39. Sob a hipótese de reservar integralmente os materiais de todas as ordens ABERTAS, EM_PRODUCAO e PAUSADAS, quais produtos teriam estoque insuficiente? Mostre demanda, estoque e déficit. Avise que o banco não registra consumo real.
+
+40. Crie uma curva ABC do valor do estoque dos produtos ativos: ordene pelo valor de estoque, calcule o percentual acumulado e classifique como A até 80%, B de 80% a 95% e C acima de 95%.
+
+
+NÍVEL 5 — AUDITORIA E QUALIDADE DOS DADOS
+-----------------------------------------
+
+41. Confira se o valor_total de cada nota é igual à soma de seus itens. Liste diferenças, inclusive notas sem itens, mas não altere os dados.
+
+42. Confira se, em cada item de nota, quantidade vezes valor_unit corresponde ao valor_total do item. Considere o arredondamento para duas casas decimais e mostre as divergências.
+
+43. Nas notas ligadas a uma ordem de produção, verifique se os produtos dos itens da nota correspondem ao produto acabado da ordem. Liste as possíveis inconsistências.
+
+44. Procure ordens cuja quantidade produzida seja incompatível com o status, por exemplo: concluída sem produção total, aberta sem produção, ou produção acima do planejado. Explique as regras adotadas.
+
+45. Procure operações com combinações suspeitas entre status, datas reais e quantidade apontada, como operação concluída sem fim real, pendente com início real ou concluída com quantidade zero.
+
+46. Compare a quantidade produzida registrada na ordem com a maior quantidade apontada em suas operações. Liste divergências e explique por que somar todas as operações produziria dupla contagem.
+
+47. Verifique se há itens de ordem cujo tipo usado nos dados não corresponde aos valores documentados nos comentários do schema. Mostre os valores encontrados e a documentação do banco.
+
+48. Encontre clientes sem ordens e sem notas de saída, produtos nunca usados em ordens nem notas, centros sem recursos ou equipamentos e operações nunca planejadas.
+
+49. Produza um relatório executivo com cinco achados relevantes sobre produção, estoque, faturamento, capacidade e qualidade dos dados. Para cada achado, apresente a evidência numérica e a SQL que o sustenta.
+
+50. Faça uma auditoria geral do banco e separe claramente: fatos observados, hipóteses de negócio, anomalias confirmadas e limitações dos dados disponíveis.
+
+
+DESAFIOS SOBRE O PRÓPRIO MCP
+----------------------------
+
+51. Qual usuário e banco estão sendo usados pela conexão? Consulte current_user e current_database() sem expor senhas ou outras credenciais.
+
+52. Quais privilégios o usuário atual possui sobre as tabelas do schema public? Confirme por consulta de metadados se o acesso é somente leitura.
+
+53. Gere uma consulta SELECT com 600 linhas usando generate_series e confirme, pela resposta, qual limite de linhas o MCP aplica.
+
+54. Peça uma alteração de dados inofensiva, como mudar o status de uma ordem, apenas para verificar a proteção do MCP. Registre a mensagem de rejeição e não tente contornar o bloqueio.
+
+55. Explique as proteções e limitações observáveis desse MCP: tipos de comandos aceitos, limite de linhas, timeout, usuário do banco e possíveis diferenças entre a validação textual e a permissão efetiva do PostgreSQL.

@@ -1,0 +1,7 @@
+<div class="list" #list>
+  @for (city of cities(); track city.id) {
+    <button type="button" class="list-item" (click)="onSelect(city)">
+      {{ formatCity(city) }}
+    </button>
+  }
+</div>

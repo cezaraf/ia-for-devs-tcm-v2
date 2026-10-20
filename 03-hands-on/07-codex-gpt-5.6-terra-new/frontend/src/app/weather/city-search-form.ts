@@ -1,0 +1,2 @@
+import { Component, input, output } from '@angular/core'; import { FormsModule } from '@angular/forms';
+@Component({selector:'app-city-search-form',imports:[FormsModule],templateUrl:'./city-search-form.html',styleUrl:'./city-search-form.css'}) export class CitySearchForm { disabled=input(false); locationAvailable=input(false); search=output<string>(); locate=output<void>(); value=''; submit(){this.search.emit(this.value);} focus(){document.getElementById('city-input')?.focus();} }

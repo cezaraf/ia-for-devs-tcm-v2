@@ -1,0 +1,54 @@
+:host {
+  display: block;
+}
+
+.card {
+  display: grid;
+  gap: var(--space-8);
+  min-height: 240px;
+  padding: var(--space-24);
+  border: var(--border-width) solid var(--color-hairline);
+  border-radius: var(--radius-container);
+  background: var(--color-surface);
+}
+
+.block {
+  background: var(--color-surface-card);
+  animation: pulse 1.2s ease-in-out infinite;
+}
+
+.title {
+  height: var(--space-24);
+  width: 50%;
+}
+
+.temperature {
+  height: var(--space-32);
+  width: 33%;
+}
+
+.line {
+  height: var(--space-16);
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .block {
+    animation: none;
+  }
+}
+
+@media (max-width: 639px) {
+  .card {
+    padding: var(--space-16);
+  }
+}

@@ -1,0 +1,48 @@
+<div class="weather-panel-root" [attr.data-theme]="theme()">
+  <div class="panel-container">
+    <header class="panel-header">
+      <h1 class="panel-title">[clima]</h1>
+    </header>
+
+    <app-city-search-form
+      [disabled]="isBusy()"
+      (search)="onSearch($event)"
+      (useLocation)="onGeolocationClick()"
+    />
+
+    <main class="result-area" aria-live="polite" [attr.aria-busy]="isBusy()">
+      @switch (state()) {
+        @case ('idle') {
+          <p class="idle-message">digite uma cidade para ver o clima atual</p>
+        }
+        @case ('searching') {
+          <app-weather-card-skeleton />
+        }
+        @case ('choosing') {
+          <app-city-list
+            [cities]="cityResults()"
+            (citySelected)="onSelectCity($event)"
+          />
+        }
+        @case ('loading') {
+          <app-weather-card-skeleton />
+        }
+        @case ('success') {
+          @if (currentWeather(); as weather) {
+            <app-weather-card
+              [weather]="weather"
+              [locationLabel]="currentLocationLabel()"
+            />
+          }
+        }
+        @case ('error') {
+          <app-error-message
+            [message]="errorMessage()"
+            [canRetry]="canRetry()"
+            (retry)="onRetry()"
+          />
+        }
+      }
+    </main>
+  </div>
+</div>

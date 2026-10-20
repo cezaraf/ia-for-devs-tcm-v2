@@ -1,0 +1,32 @@
+.list {
+  max-height: 200px;
+  overflow-y: auto;
+  border: 1px solid var(--color-hairline);
+  border-radius: var(--radius-container);
+}
+
+.list-item {
+  display: block;
+  width: 100%;
+  height: 40px;
+  padding: var(--space-2) var(--space-3);
+  font-size: 16px;
+  line-height: 1.5;
+  text-align: left;
+  border: none;
+  border-bottom: 1px solid var(--color-hairline);
+  background: transparent;
+  color: var(--color-text-body);
+  cursor: pointer;
+}
+
+.list-item:last-child {
+  border-bottom: none;
+}
+
+.list-item:hover,
+.list-item:focus-visible {
+  background: var(--color-surface);
+  color: var(--color-text);
+  font-weight: 500;
+}

@@ -1,0 +1,127 @@
+id: painel-clima
+status: especificado
+fase: auditoria
+criado_em: 2026-10-20
+responsavel: ""
+
+classificacao:
+  rigor: medium
+  risco: medio
+  autonomia: assistido
+  alvo_contrato: branch
+  motivo: "Duas superfícies (UI Angular SSR + API Spring) com contrato novo entre camadas, integração com duas APIs externas (Open-Meteo Geocoding e Forecast) e UX relevante (estados de carregamento/erro, geolocalização opcional). Sem autenticação, billing, migração ou persistência; geolocalização é dado pessoal usado só em memória e com consentimento do navegador. Alvo branch por decisão do dev em 2026-10-20 (PRM-001): o contrato vivo consolida após merge na branch alvo."
+
+superficies:
+  - ui
+  - api
+  - integracao
+dominios:
+  - clima
+contratos_lidos: []
+premissas:
+  - "PRM-001: alvo_contrato local porque o projeto não era repositório git. Em 2026-10-20 o dev autorizou git init (branch master, sem commit e sem remote); em 2026-10-20 o dev autorizou o commit inicial e definiu alvo_contrato branch; rota ganha 10 e 11. O brief, congelado, registra a classificação inicial (local)."
+  - "PRM-002: não existe contrato vivo (sdd/contratos/ ausente); o único comportamento existente é GET /healthcheck, que deve ser preservado."
+  - "PRM-003: o endpoint novo é interno (consumido apenas pelo próprio frontend na mesma origem) e não constitui contrato público com terceiros."
+  - "PRM-004: geolocalização é opcional, solicitada só no navegador, nunca no SSR, e não é persistida nem registrada em log."
+  - "PRM-005: Open-Meteo dispensa API key; não há segredo envolvido. Testes nunca chamam a API real."
+  - "PRM-006: harness SDD não instalado em sdd/ (governanca/ está na raiz, sem policies.yaml, sem hooks e sem sdd-fluxo.sh no caminho canônico); gates determinísticos ficam indisponíveis até rodar o passo 05."
+  - "PRM-007: RESOLVIDA em 2026-10-20 — o dev ajustou o CLAUDE.md para apontar prompt_1.md."
+  - "PRM-008: DECISÃO DO DEV (2026-10-20): execução e testes no browser usam o compose.yaml do projeto (docker compose up, https://test.cezar.dev/<VERSION>/), e não a skill global sandbox; o ~/.claude/CLAUDE.md global fica sem efeito neste ponto para este projeto. Motivo: a sandbox roteia só por Host, sem strip de /<VERSION>/api, o que quebra as URLs relativas api/... e o allowedHosts do angular.json."
+  - "PRM-009: linha de base dos arquivos protegidos (compose.yaml, angular.json, pom.xml, package.json) passa a ser o git, mas só depois de um commit inicial, que depende de autorização (autonomia assistido). O compose reescreve o baseHref do angular.json no bind mount ao subir: essa diferença é esperada e não conta como violação."
+  - "PRM-010: as skills mandam usar nomes, chaves, timeouts, códigos e mensagens 'definidos no prompt da tarefa', mas prompt_1.md original não define nenhum. Em 2026-10-20 o dev acrescentou ao prompt_1.md a seção 'Lacunas a definir na TechSpec': a TechSpec (passo 02) passa a ser a fonte desses valores. O brief permanece congelado com a solicitação original."
+  - "PRM-011: DESIGN.md (Berkeley Mono, accent #007aff, warning/success) diverge de .claude/rules/design-system.md (JetBrains Mono, sem azul/warning/success); prevalece a regra do projeto."
+  - "PRM-022: DECISÃO DO DEV (2026-10-20, passo 04): confirma PRM-012 a PRM-019 do PRD (RF-010 realinhado a PRM-019: tema mantido após erro e na lista), aceita PRM-020 (subregion no contrato /cities), rejeita PRM-021 (auto-seleção de capital) e autoriza um commit local dos artefatos de especificação na master, sem push."
+
+rota:
+  techspec: obrigatoria
+  review: obrigatoria
+  pr_merge: obrigatoria
+  deploy: dispensada
+  justificativas_de_dispensa:
+    - "deploy: alvo branch; execução apenas no ambiente de desenvolvimento (compose.yaml, PRM-008), sem produção."
+    - "passo 05: não incluído por padrão; recomendado antes do 04 para instalar sdd/governanca (PRM-006)."
+  etapas: "00 → 01 → 02 → 03 → 04 → 06 → 07 → 08 → 10 → 11 → 13 → 14"
+
+incremento_canonico:
+  brief: sdd/incrementos/painel-clima/brief.md
+  execucao: sdd/incrementos/painel-clima/execucao.md
+  impacto_contratual: sdd/incrementos/painel-clima/impacto-contratual/
+
+execucao:
+  workflow: .compozy/tasks/painel-clima
+  prd: .compozy/tasks/painel-clima/_prd.md
+  techspec: .compozy/tasks/painel-clima/_techspec.md
+  base_ref: master
+  base_sha: d5bc7511b609b02754cc5d61e52d6356828fafcf
+
+gates:
+  especificacao:
+    parecer_agente:
+      status: pronto
+      agente: cz-auditor-especificacao
+      evidencia: ".compozy/tasks/painel-clima/auditoria-especificacao.md (Status PRONTO, Evidence SHA c18b424423820403408827ca57073e5f8781b876)"
+      data: "2026-10-20"
+    gate_humano:
+      requerido: false
+      status: dispensado
+      aprovado_por: ""
+      escopo: "Risco medio, autonomia assistido, sem contrato público, dados, autorização ou migração."
+      data: ""
+  pr:
+    gate_humano:
+      requerido: true
+      status: pendente
+      aprovado_por: ""
+      escopo: "Autonomia assistido: commit, push e PR exigem autorização explícita do dev."
+      data: ""
+  merge:
+    gate_humano:
+      requerido: true
+      status: pendente
+      aprovado_por: ""
+      escopo: "Autonomia assistido: merge na branch alvo (master) exige autorização explícita do dev."
+      data: ""
+  producao:
+    gate_humano:
+      requerido: false
+      status: dispensado
+      aprovado_por: ""
+      escopo: "Sem deploy em produção neste incremento."
+      data: ""
+
+pr:
+  numero: null
+  url: ""
+  status: nao_iniciado
+  head_sha: ""
+
+deploy:
+  ambiente: ""
+  status: nao_iniciado
+  versao: ""
+  evidencia: []
+  rollback: ""
+
+metricas:
+  data_triagem: "2026-10-20T18:30:21Z"
+  data_especificado: 2026-10-20T20:32:07Z
+  data_primeira_task: ""
+  data_validado: ""
+  data_merge: ""
+  data_deploy: ""
+  data_consolidado: ""
+  reauditorias: 0
+  revisoes_plano: 0
+
+incidente:
+  origem: ""
+  evidencia: []
+  janela: ""
+
+bloqueio:
+  motivo: ""
+  gate: ""
+  como_desbloquear: ""
+
+fechamento:
+  target: sdd/historico/2026-10-20-painel-clima

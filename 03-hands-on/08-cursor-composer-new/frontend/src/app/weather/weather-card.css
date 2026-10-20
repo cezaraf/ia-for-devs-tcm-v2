@@ -1,0 +1,86 @@
+.card {
+  min-height: 320px;
+  padding: var(--space-12) var(--space-8);
+  border-radius: var(--radius-container);
+  background: var(--color-bg);
+  border: 1px solid var(--color-hairline);
+}
+
+:host-context([data-theme='night']) .card {
+  background: var(--color-surface);
+  border: none;
+}
+
+.card-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2);
+  margin-bottom: var(--space-4);
+}
+
+.location {
+  margin: 0;
+  font-size: 16px;
+  line-height: 1.5;
+  font-weight: 700;
+  color: var(--color-text);
+}
+
+.badge {
+  padding: var(--space-1) var(--space-2);
+  font-size: 14px;
+  line-height: 2;
+  font-weight: 500;
+  border-radius: var(--radius-control);
+  background: var(--color-text);
+  color: var(--color-bg);
+}
+
+.temperature {
+  margin: 0 0 var(--space-2);
+  font-size: clamp(28px, 6vw, 38px);
+  line-height: 1.5;
+  font-weight: 700;
+  letter-spacing: 0;
+  color: var(--color-text);
+}
+
+.condition {
+  margin: 0 0 var(--space-6);
+  font-size: 16px;
+  line-height: 1.5;
+  font-weight: 500;
+  color: var(--color-text-body);
+}
+
+.details {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-4);
+  margin-bottom: var(--space-6);
+}
+
+.detail {
+  margin: 0;
+  padding: var(--space-2) 0;
+  font-size: 16px;
+  line-height: 1.5;
+  color: var(--color-text-body);
+}
+
+.footer {
+  font-size: 14px;
+  line-height: 2;
+  color: var(--color-text-mute);
+}
+
+@media (max-width: 639px) {
+  .card {
+    padding: var(--space-6) var(--space-4);
+  }
+
+  .details {
+    grid-template-columns: 1fr;
+  }
+}

@@ -1,0 +1,88 @@
+.card {
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  min-height: 320px;
+  padding: var(--space-12) var(--space-8);
+  background: var(--card-bg);
+  border: var(--card-border);
+  border-radius: var(--radius-container);
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+}
+
+.block {
+  background: var(--color-surface-card);
+  border-radius: var(--radius-control);
+  animation: skeleton-pulse 1.2s ease-in-out infinite alternate;
+}
+
+/* Mesmas alturas das linhas de texto do WeatherCard (16px×1.5, 38px×1.5, 14px×2, detalhe 24px+16px). */
+.label-block {
+  width: 40%;
+  height: 24px;
+}
+
+.badge-block {
+  width: 80px;
+  height: 36px;
+}
+
+.temperature-block {
+  width: 140px;
+  height: 57px;
+}
+
+.condition-block {
+  width: 50%;
+  height: 24px;
+}
+
+.details {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-4);
+  margin: 0;
+  padding: 0;
+}
+
+.detail-block {
+  height: 40px;
+}
+
+.footer-block {
+  width: 60%;
+  height: 28px;
+}
+
+@keyframes skeleton-pulse {
+  from {
+    opacity: 1;
+  }
+
+  to {
+    opacity: 0.5;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .block {
+    animation: none;
+  }
+}
+
+@media (max-width: 639px) {
+  .card {
+    padding: var(--space-6) var(--space-4);
+  }
+
+  .details {
+    grid-template-columns: 1fr;
+  }
+}
